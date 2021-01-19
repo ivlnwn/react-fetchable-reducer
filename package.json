@@ -1,0 +1,19 @@
+{
+  "name": "react-fetchable-reducer",
+  "version": "1.0.0",
+  "description": "Fetchable reducers factory",
+  "main": "index.js",
+  "repository": "git@github.com:ivlnwn/react-fetchable-reducer.git",
+  "author": "ivlnwn <ivlnwn@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "redux": "*"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "prettier": "^2.2.1",
+     "redux": "*",
+     "typescript": "^4.0.3"
+  }
+}
