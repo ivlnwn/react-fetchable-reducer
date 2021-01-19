@@ -2,7 +2,7 @@
   "name": "react-fetchable-reducer",
   "version": "1.0.0",
   "description": "Fetchable reducers factory",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": "git@github.com:ivlnwn/react-fetchable-reducer.git",
   "author": "ivlnwn <ivlnwn@gmail.com>",
   "license": "MIT",
