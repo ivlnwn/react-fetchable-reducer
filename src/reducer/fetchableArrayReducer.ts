@@ -37,7 +37,7 @@ function addModelsToData<Model>(
   } else {
     return {
       allIds: [...new Set([...data.allIds, ...newData.allIds])],
-      byId: merge(data.byId, newData.byId),
+      byId: merge({}, data.byId, newData.byId),
     };
   }
 }
@@ -76,7 +76,7 @@ export function createFetchableArrayReducer<Model, ExtraModel = null>(
        * SUCCESS ACTION
        */
       case getActionName(SUCCESS, reducerName):
-        if (Array.isArray(action.payload)) {
+        if (!Array.isArray(action.payload)) {
           return {
             ...state,
             isLoading: false,
