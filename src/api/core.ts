@@ -71,13 +71,18 @@ export function makeFetch({
         headers,
         body: data && JSON.stringify(data),
       });
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        result = {};
+      }
       if (response.ok) {
         dispatchSuccess(result, fetchableReducer);
         resolve(result);
       } else {
-        dispatchError(result.error, fetchableReducer);
-        reject(result.error);
+        dispatchError(result, fetchableReducer);
+        reject(result);
       }
     } catch (errorMessage) {
       dispatchError(errorMessage.toString(), fetchableReducer);

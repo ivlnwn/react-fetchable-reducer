@@ -68,7 +68,8 @@ export enum ReducerMode {
 
 export function createFetchableArrayReducer<Model, ExtraModel = null>(
   reducerName: string,
-  mode: ReducerMode = ReducerMode.supplement,
+  dataStorageMode: ReducerMode = ReducerMode.supplement,
+  itemUpdateMode: ReducerMode = ReducerMode.override,
   initialData: Model[] = [],
 ): Reducer<FetchableArrayState<Model, ExtraModel>, Action> {
   return function fetchableArray(
@@ -88,16 +89,42 @@ export function createFetchableArrayReducer<Model, ExtraModel = null>(
           errorMessage: undefined,
         };
       case getActionName(SUCCESS, reducerName):
-        const payloadIds = action.payload.map((p: any) => p.id);
-        if (mode === ReducerMode.supplement) {
+        if (action.payload === undefined) {
           return {
             ...state,
             isLoading: false,
-            data: action.payload
-              ? [...state.data.filter((o: any) => !payloadIds.includes(o.id)), ...action.payload]
-              : state.data,
-            extraData: {...state.extraData, ...action.extraPayload},
           };
+        }
+        const payloadIds = action.payload.map((p: any) => p.id);
+        if (dataStorageMode === ReducerMode.supplement) {
+          if (itemUpdateMode === ReducerMode.override) {
+            return {
+              ...state,
+              isLoading: false,
+              data: [
+                ...state.data.filter((o: any) => !payloadIds.includes(o.id)),
+                ...action.payload,
+              ],
+              extraData: {...state.extraData, ...action.extraPayload},
+            };
+          } else {
+            let updatedStateData = state.data.map((o: any) => {
+              if (payloadIds.includes(o.id)) {
+                return {...o, ...action.payload.find((i: any) => i.id === o.id)};
+              }
+              return o;
+            });
+            const stateIds = state.data.map((p: any) => p.id);
+            return {
+              ...state,
+              isLoading: false,
+              data: [
+                ...updatedStateData,
+                ...action.payload.filter((o: any) => !stateIds.includes(o.id)),
+              ],
+              extraData: {...state.extraData, ...action.extraPayload},
+            };
+          }
         } else {
           return {
             ...state,
