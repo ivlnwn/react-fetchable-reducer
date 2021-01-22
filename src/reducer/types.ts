@@ -5,10 +5,15 @@ export interface FetchableState<Model, ExtraModel = null> {
   extraData?: ExtraModel;
 }
 
+export interface FetchableArrayData<Model> {
+  allIds: string[];
+  byId: {[key: string]: Model};
+}
+
 export interface FetchableArrayState<Model, ExtraModel = null> {
   isLoading: boolean;
   errorMessage?: string;
-  data: Model[];
+  data: FetchableArrayData<Model>;
   extraData?: ExtraModel;
 }
 
