@@ -1,16 +1,12 @@
-import {
-  CLEAR,
-  FAILURE,
-  FetchableState,
-  FETCHING,
-  SET_EXTRA_DATA,
-  SUCCESS,
-} from './types';
+import {CLEAR, FAILURE, FetchableState, FETCHING, SET_EXTRA_DATA, SUCCESS,} from './types';
 import {Action, Reducer} from 'redux';
 import {getActionName} from './actions';
+import {ItemUpdateMode} from "./fetchableArrayReducer";
+import merge from 'lodash.merge';
 
 export function createFetchableReducer<Model, ExtraModel = null>(
   reducerName: string,
+  dataUpdateMode: ItemUpdateMode = ItemUpdateMode.override,
   initialData: Model | undefined = undefined,
 ): Reducer<FetchableState<Model, ExtraModel>, Action> {
   return function fetchable(
@@ -36,12 +32,21 @@ export function createFetchableReducer<Model, ExtraModel = null>(
        * SUCCESS ACTION
        */
       case getActionName(SUCCESS, reducerName):
-        return {
-          ...state,
-          isLoading: false,
-          data: action.payload ?? state.data,
-          extraData: {...state.extraData, ...action.extraPayload},
-        };
+        if (dataUpdateMode === ItemUpdateMode.override) {
+          return {
+            ...state,
+            isLoading: false,
+            data: action.payload ?? state.data,
+            extraData: {...state.extraData, ...action.extraPayload},
+          };
+        } else {
+          return {
+            ...state,
+            isLoading: false,
+            data: merge({}, state.data, action.payload ?? {}),
+            extraData: {...state.extraData, ...action.extraPayload},
+          };
+        }
       /*
        * FAILURE ACTION
        */
