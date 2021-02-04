@@ -10,6 +10,7 @@ import {
 import {Action, Reducer} from 'redux';
 import {getActionName} from './actions';
 import merge from 'lodash.merge';
+import filter from 'lodash.filter';
 
 function parseModelsToData<Model>(models: Model[]): FetchableArrayData<Model> {
   return {
@@ -27,13 +28,29 @@ function addModelsToData<Model>(
   data: FetchableArrayData<Model>,
   models: Model[],
   mode: ItemUpdateMode = ItemUpdateMode.override,
+  overrideItemsWithMatchingFieldValue?: keyof Model,
 ): FetchableArrayData<Model> {
   const newData = parseModelsToData(models);
   if (mode === ItemUpdateMode.override) {
-    return {
-      allIds: [...new Set([...data.allIds, ...newData.allIds])],
-      byId: {...data.byId, ...newData.byId},
-    };
+    if (overrideItemsWithMatchingFieldValue) {
+      const groupedValues = new Set(
+        Object.values(newData.byId ?? {}).map((item) => item[overrideItemsWithMatchingFieldValue]),
+      );
+      const dataWithoutUnnecessaryItems = filter(
+        data.byId,
+        (item: Model) => !groupedValues.has(item[overrideItemsWithMatchingFieldValue]),
+      ) as Model[];
+      const cleanedOldData = parseModelsToData(dataWithoutUnnecessaryItems);
+      return {
+        allIds: [...new Set([...cleanedOldData.allIds, ...newData.allIds])],
+        byId: {...cleanedOldData.byId, ...newData.byId},
+      };
+    } else {
+      return {
+        allIds: [...new Set([...data.allIds, ...newData.allIds])],
+        byId: {...data.byId, ...newData.byId},
+      };
+    }
   } else {
     return {
       allIds: [...new Set([...data.allIds, ...newData.allIds])],
@@ -47,12 +64,24 @@ export enum StorageMode {
   supplement = 'supplement',
 }
 
-export function createFetchableArrayReducer<Model, ExtraModel = null>(
-  reducerName: string,
-  dataStorageMode: StorageMode = StorageMode.supplement,
-  itemUpdateMode: ItemUpdateMode = ItemUpdateMode.override,
-  initialData: Model[] = [],
-): Reducer<FetchableArrayState<Model, ExtraModel>, Action> {
+interface FetchableArrayReducerProps<Model> {
+  reducerName: string;
+  dataStorageMode?: StorageMode;
+  initialData: Model[];
+  itemUpdate?: {
+    mode: ItemUpdateMode;
+    overrideItemsWithMatchingFieldValue?: keyof Model;
+  };
+}
+
+export function createFetchableArrayReducer<Model, ExtraModel = null>({
+  reducerName,
+  dataStorageMode = StorageMode.supplement,
+  initialData = [],
+  itemUpdate = {
+    mode: ItemUpdateMode.override,
+  },
+}: FetchableArrayReducerProps<Model>): Reducer<FetchableArrayState<Model, ExtraModel>, Action> {
   return function fetchableArray(
     state: FetchableArrayState<Model, ExtraModel> = {
       isLoading: false,
@@ -86,7 +115,12 @@ export function createFetchableArrayReducer<Model, ExtraModel = null>(
           return {
             ...state,
             isLoading: false,
-            data: addModelsToData(state.data, action.payload, itemUpdateMode),
+            data: addModelsToData(
+              state.data,
+              action.payload,
+              itemUpdate?.mode,
+              itemUpdate?.overrideItemsWithMatchingFieldValue,
+            ),
             extraData: {...state.extraData, ...action.extraPayload},
           };
         } else {

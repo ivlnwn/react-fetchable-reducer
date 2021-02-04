@@ -42,7 +42,7 @@ interface MakeFetchProps {
   fetchableReducer?: FetchableReducer;
   url: string;
   headers?: Record<string, string>;
-  method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  method: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
   getToken?: () => Promise<string>;
   data?: Record<string, unknown>;
 }

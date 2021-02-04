@@ -1,14 +1,25 @@
-import {CLEAR, FAILURE, FetchableState, FETCHING, SET_EXTRA_DATA, SUCCESS,} from './types';
+import {CLEAR, FAILURE, FetchableState, FETCHING, SET_EXTRA_DATA, SUCCESS} from './types';
 import {Action, Reducer} from 'redux';
 import {getActionName} from './actions';
-import {ItemUpdateMode} from "./fetchableArrayReducer";
+import {ItemUpdateMode} from './fetchableArrayReducer';
 import merge from 'lodash.merge';
 
-export function createFetchableReducer<Model, ExtraModel = null>(
-  reducerName: string,
-  dataUpdateMode: ItemUpdateMode = ItemUpdateMode.override,
-  initialData: Model | undefined = undefined,
-): Reducer<FetchableState<Model, ExtraModel>, Action> {
+interface FetchableReducerProps<Model> {
+  reducerName: string;
+  initialData?: Model | undefined;
+  dataUpdate?: {
+    mode: ItemUpdateMode;
+    overridableProperties?: (keyof Model)[];
+  };
+}
+
+export function createFetchableReducer<Model, ExtraModel = null>({
+  reducerName,
+  initialData = undefined,
+  dataUpdate = {
+    mode: ItemUpdateMode.override,
+  },
+}: FetchableReducerProps<Model>): Reducer<FetchableState<Model, ExtraModel>, Action> {
   return function fetchable(
     state: FetchableState<Model, ExtraModel> = {
       isLoading: false,
@@ -32,7 +43,7 @@ export function createFetchableReducer<Model, ExtraModel = null>(
        * SUCCESS ACTION
        */
       case getActionName(SUCCESS, reducerName):
-        if (dataUpdateMode === ItemUpdateMode.override) {
+        if (dataUpdate?.mode === ItemUpdateMode.override) {
           return {
             ...state,
             isLoading: false,
@@ -40,12 +51,29 @@ export function createFetchableReducer<Model, ExtraModel = null>(
             extraData: {...state.extraData, ...action.extraPayload},
           };
         } else {
-          return {
-            ...state,
-            isLoading: false,
-            data: merge({}, state.data, action.payload ?? {}),
-            extraData: {...state.extraData, ...action.extraPayload},
-          };
+          if (dataUpdate?.overridableProperties && dataUpdate.overridableProperties.length > 0) {
+            const mergedData = merge({}, state.data, action.payload ?? {});
+            const overridableData = dataUpdate.overridableProperties.reduce((current, item) => {
+              if (Object.prototype.hasOwnProperty.call(action.payload, item)) {
+                return {...current, [item]: action.payload[item]};
+              } else {
+                return current;
+              }
+            }, {});
+            return {
+              ...state,
+              isLoading: false,
+              data: {...mergedData, ...overridableData},
+              extraData: {...state.extraData, ...action.extraPayload},
+            };
+          } else {
+            return {
+              ...state,
+              isLoading: false,
+              data: merge({}, state.data, action.payload ?? {}),
+              extraData: {...state.extraData, ...action.extraPayload},
+            };
+          }
         }
       /*
        * FAILURE ACTION

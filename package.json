@@ -8,12 +8,14 @@
     "license": "MIT",
     "private": false,
     "dependencies": {
+        "lodash.filter": "^4.6.0",
         "lodash.merge": "^4.6.0"
     },
     "peerDependencies": {
         "redux": "*"
     },
     "devDependencies": {
+        "@types/lodash.filter": "^4.6.6",
         "@types/lodash.merge": "^4.6.6",
         "eslint": "^7.2.0",
         "prettier": "^2.2.1",
