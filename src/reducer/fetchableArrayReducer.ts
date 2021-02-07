@@ -67,7 +67,7 @@ export enum StorageMode {
 interface FetchableArrayReducerProps<Model> {
   reducerName: string;
   dataStorageMode?: StorageMode;
-  initialData: Model[];
+  initialData?: Model[];
   itemUpdate?: {
     mode: ItemUpdateMode;
     overrideItemsWithMatchingFieldValue?: keyof Model;
