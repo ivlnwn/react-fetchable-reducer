@@ -6,6 +6,7 @@ import {
   FETCHING,
   SET_EXTRA_DATA,
   SUCCESS,
+  DELETE_BY_IDS,
 } from './types';
 import {Action, Reducer} from 'redux';
 import {getActionName} from './actions';
@@ -67,7 +68,7 @@ export enum StorageMode {
 interface FetchableArrayReducerProps<Model> {
   reducerName: string;
   dataStorageMode?: StorageMode;
-  initialData: Model[];
+  initialData?: Model[];
   itemUpdate?: {
     mode: ItemUpdateMode;
     overrideItemsWithMatchingFieldValue?: keyof Model;
@@ -157,6 +158,21 @@ export function createFetchableArrayReducer<Model, ExtraModel = null>({
         return {
           ...state,
           extraData: {...state.extraData, ...action.extraPayload},
+        };
+      /*
+       * DELETE_BY_IDS ACTION
+       */
+      case getActionName(DELETE_BY_IDS, reducerName):
+        const newById = state.data.byId;
+        action.payload.forEach((o: number | string) => {
+          delete newById[o];
+        });
+        return {
+          ...state,
+          data: {
+            allIds: state.data.allIds.filter((o) => !action.payload.includes(o)),
+            byId: newById,
+          },
         };
       default:
         return state;

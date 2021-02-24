@@ -1,4 +1,4 @@
-import {CLEAR, FAILURE, FETCHING, SET_EXTRA_DATA, SUCCESS} from './types';
+import {CLEAR, FAILURE, FETCHING, SET_EXTRA_DATA, SUCCESS, DELETE_BY_IDS} from './types';
 
 export function getActionName(actionPrefix: string, reducerName: string): string {
   return actionPrefix + reducerName;
@@ -57,6 +57,21 @@ export function getSetExtraDataAction<ExtraModel>(
     return {
       type: getActionName(SET_EXTRA_DATA, reducerName),
       extraPayload: extraData,
+    };
+  };
+}
+
+export function getDeleteByIdsAction<Model, ExtraModel = null>(
+  reducerName: string,
+): (
+  ids: number[] | string[],
+) => any {
+  return (
+    ids: number[] | string[],
+  ): any => {
+    return {
+      type: getActionName(DELETE_BY_IDS, reducerName),
+      payload: ids,
     };
   };
 }

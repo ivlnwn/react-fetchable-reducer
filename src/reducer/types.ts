@@ -22,3 +22,4 @@ export const SUCCESS = 'FETCHING_SUCCESS_';
 export const FAILURE = 'FETCHING_FAILURE_';
 export const CLEAR = 'CLEAR_';
 export const SET_EXTRA_DATA = 'SET_EXTRA_DATA_';
+export const DELETE_BY_IDS = 'DELETE_BY_IDS_';
