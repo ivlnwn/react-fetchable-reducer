@@ -82,7 +82,7 @@ export function makeFetch({
         resolve(result);
       } else {
         dispatchError(result, fetchableReducer);
-        reject(result);
+        reject({status: response.status, data: result});
       }
     } catch (errorMessage) {
       dispatchError(errorMessage.toString(), fetchableReducer);
