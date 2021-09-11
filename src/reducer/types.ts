@@ -1,3 +1,7 @@
+export interface ModelWithId {
+  id: string | number;
+}
+
 export interface FetchableState<Model, ExtraModel = null> {
   isLoading: boolean;
   errorMessage?: string;

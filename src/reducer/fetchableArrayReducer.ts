@@ -7,6 +7,7 @@ import {
   SET_EXTRA_DATA,
   SUCCESS,
   DELETE_BY_IDS,
+  ModelWithId,
 } from './types';
 import {Action, Reducer} from 'redux';
 import {getActionName} from './actions';
@@ -75,7 +76,7 @@ interface FetchableArrayReducerProps<Model> {
   };
 }
 
-export function createFetchableArrayReducer<Model, ExtraModel = null>({
+export function createFetchableArrayReducer<Model extends ModelWithId, ExtraModel = null>({
   reducerName,
   dataStorageMode = StorageMode.supplement,
   initialData = [],

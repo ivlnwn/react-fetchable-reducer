@@ -12,14 +12,22 @@
         "lodash.merge": "^4.6.0"
     },
     "peerDependencies": {
-        "redux": "*"
+        "redux": "*",
+        "reselect": "*",
+        "react": "17.*",
+        "react-redux": "7.*"
     },
     "devDependencies": {
         "@types/lodash.filter": "^4.6.6",
         "@types/lodash.merge": "^4.6.6",
         "eslint": "^7.2.0",
         "prettier": "^2.2.1",
+        "react": "17.*",
         "redux": "*",
-        "typescript": "^4.0.3"
+        "reselect": "*",
+        "typescript": "^4.0.3",
+        "react-redux": "7.*",
+        "@types/react": "17.*",
+        "@types/react-redux": "7.*"
     }
 }
