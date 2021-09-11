@@ -25,7 +25,7 @@ interface ReturnType<Model> {
   allPagesLoaded: boolean;
 }
 
-export default function useFetchableArrayApi<Model extends ModelWithId>({
+export function useFetchableArrayApi<Model extends ModelWithId>({
   apiFetch,
   selectors,
   itemsPerPage = 10,
