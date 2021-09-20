@@ -20,6 +20,7 @@ interface ReturnType<Model> {
   data: Model[];
   fetching: boolean;
   refresh: () => void;
+  refreshWithoutIndicator: () => Promise<any>;
   refreshing: boolean;
   fetchMore: () => void;
   allPagesLoaded: boolean;
@@ -74,6 +75,7 @@ export function useFetchableArrayApi<Model extends ModelWithId>({
     data,
     fetching,
     refresh,
+    refreshWithoutIndicator,
     refreshing,
     fetchMore,
     allPagesLoaded: pagesLoaded >= totalPages,
