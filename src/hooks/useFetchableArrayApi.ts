@@ -1,6 +1,6 @@
 import {ModelWithId} from "../reducer/types";
 import {FetchableArraySelectors} from "../selectors/fetchableArraySelectors";
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 export interface PaginationProps {
@@ -51,10 +51,6 @@ export function useFetchableArrayApi<Model extends ModelWithId>({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiFetch, itemsPerPage]);
-
-  useEffect(() => {
-    refreshWithoutIndicator();
-  }, [refreshWithoutIndicator]);
 
   function refresh(): void {
     setRefreshing(true);
