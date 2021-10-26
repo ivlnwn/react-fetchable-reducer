@@ -1,7 +1,8 @@
-import {ModelWithId} from "../reducer/types";
-import {FetchableArraySelectors} from "../selectors/fetchableArraySelectors";
+import {ModelWithId} from '../reducer/types';
+import {FetchableArraySelectors} from '../selectors/fetchableArraySelectors';
 import {useCallback, useState} from 'react';
 import {useSelector} from 'react-redux';
+import {Selector} from 'reselect';
 
 export interface PaginationProps {
   page: number;
@@ -11,6 +12,7 @@ export interface PaginationProps {
 interface Props<Model extends ModelWithId> {
   apiFetch: (props: PaginationProps) => Promise<any>;
   selectors: FetchableArraySelectors<any, Model, any>;
+  customDataSelector?: (ids: Model['id'][]) => Selector<any, Model[]>;
   itemsPerPage?: number;
   getTotalPagesFromApiResult: (result: any) => number;
   getItemsIdsFromApiResult: (result: any) => Model['id'][];
@@ -29,6 +31,7 @@ interface ReturnType<Model> {
 export function useFetchableArrayApi<Model extends ModelWithId>({
   apiFetch,
   selectors,
+  customDataSelector,
   itemsPerPage = 10,
   getItemsIdsFromApiResult,
   getTotalPagesFromApiResult,
@@ -38,7 +41,9 @@ export function useFetchableArrayApi<Model extends ModelWithId>({
   const [pagesLoaded, setPagesLoaded] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const data = useSelector(selectors.getByIds(itemsIds));
+  const data = useSelector(
+    customDataSelector ? customDataSelector(itemsIds) : selectors.getByIds(itemsIds),
+  );
   const fetching = useSelector(selectors.getIsFetching());
 
   const refreshWithoutIndicator = useCallback((): Promise<any> => {
