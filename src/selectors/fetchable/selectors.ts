@@ -1,4 +1,4 @@
-import {FetchableState} from '../reducer/types';
+import {FetchableState} from '../../reducers/fetchable/types';
 import {createSelector, Selector} from 'reselect';
 
 export interface FetchableSelectors<RootState, Model, ExtraModel = null> {
