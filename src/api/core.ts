@@ -1,4 +1,4 @@
-import {getErrorAction, getFetchingAction, getSuccessAction} from '../reducer/actions';
+import {getErrorAction, getFetchingAction, getSuccessAction} from '../reducers/fetchable/actions';
 import {Action, Dispatch} from 'redux';
 
 interface FetchableReducer {
@@ -84,9 +84,9 @@ export function makeFetch({
         dispatchError(result, fetchableReducer);
         reject({status: response.status, data: result});
       }
-    } catch (errorMessage) {
-      dispatchError(errorMessage.toString(), fetchableReducer);
-      reject(errorMessage.toString());
+    } catch (errorMessage: any) {
+      dispatchError(errorMessage?.toString(), fetchableReducer);
+      reject(errorMessage?.toString());
     }
   });
 }

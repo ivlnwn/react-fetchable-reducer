@@ -1,5 +1,5 @@
-import {ModelWithId} from '../reducer/types';
-import {FetchableArraySelectors} from '../selectors/fetchableArraySelectors';
+import {ModelWithId} from '../reducers/fetchable/types';
+import {FetchableArraySelectors} from '../selectors/fetchable/arraySelectors';
 import {useCallback, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Selector} from 'reselect';
