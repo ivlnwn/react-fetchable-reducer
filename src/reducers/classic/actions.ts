@@ -23,8 +23,8 @@ function getUpdateAction<Model>(reducerName: string): (data: Partial<Model>) => 
 
 function getUpdateArrayAction<Model extends ModelWithId>(
   reducerName: string,
-): (data: Pick<Model, 'id'>[]) => any {
-  return (data: Pick<Model, 'id'>[]): any => {
+): (data: (Partial<Model> & Pick<Model, 'id'>)[]) => any {
+  return (data: (Partial<Model> & Pick<Model, 'id'>)[]): any => {
     return {
       type: getActionType(ActionTypePrefix.update, reducerName),
       payload: data,
