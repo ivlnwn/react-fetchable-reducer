@@ -1,6 +1,6 @@
 {
     "name": "@ivlnwn/react-fetchable-reducer",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Fetchable reducers factory",
     "homepage": "https://github.com/ivlnwn/react-fetchable-reducer",
     "license": "MIT",
