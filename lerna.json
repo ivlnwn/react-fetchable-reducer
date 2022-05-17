@@ -6,7 +6,7 @@
     "version": "1.2.1",
     "command": {
         "publish": {
-            "npmClient": "npm",
+            "npmClient": "yarn",
             "verifyAccess": false
         }
     }
