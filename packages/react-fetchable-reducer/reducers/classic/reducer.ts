@@ -1,4 +1,4 @@
-import {ActionTypePrefix, ModelWithId} from './types';
+import {ActionTypePrefix} from './types';
 import {Action, Reducer} from 'redux';
 import {ClassicActions} from './actions';
 

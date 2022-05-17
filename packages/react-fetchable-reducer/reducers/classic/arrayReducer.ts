@@ -2,7 +2,6 @@ import {ActionTypePrefix, ArrayState, ModelWithId} from './types';
 import {Action, Reducer} from 'redux';
 import {ClassicActions} from './actions';
 import merge from 'lodash.merge';
-import filter from 'lodash.filter';
 
 function parseModelsToData<Model extends ModelWithId>(models: Model[]): ArrayState<Model> {
   return {
