@@ -20,7 +20,6 @@ export const FetchableReducer = {
   createArraySelectors: createFetchableArraySelectors,
 };
 
-
 import {ClassicActions} from './reducers/classic/actions';
 import {createReducer as createClassicReducer} from './reducers/classic/reducer';
 import {createArrayReducer as createClassicArrayReducer} from './reducers/classic/arrayReducer';
