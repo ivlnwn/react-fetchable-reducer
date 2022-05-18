@@ -1,4 +1,4 @@
-import {getErrorAction, getFetchingAction, getSuccessAction} from '../reducers/fetchable/actions';
+import {FetchableActions} from '../reducers/fetchable/actions';
 import {Action, Dispatch} from 'redux';
 
 interface FetchableReducer {
@@ -13,7 +13,7 @@ interface FetchableReducer {
 function dispatchFetching(fetchableReducer?: FetchableReducer): void {
   if (fetchableReducer) {
     fetchableReducer.items.forEach((item) =>
-      fetchableReducer.dispatch(getFetchingAction(item.reducerName)()),
+      fetchableReducer.dispatch(FetchableActions.array.fetching(item.reducerName)()),
     );
   }
 }
@@ -22,7 +22,7 @@ function dispatchSuccess(result: any, fetchableReducer?: FetchableReducer): void
   if (fetchableReducer) {
     fetchableReducer.items.forEach((item) =>
       fetchableReducer.dispatch(
-        getSuccessAction(item.reducerName)(result, item.parseToModel, item.parseToExtraModel),
+        FetchableActions.array.success(item.reducerName)(result, item.parseToModel, item.parseToExtraModel),
       ),
     );
   }
@@ -32,7 +32,7 @@ function dispatchError(errorMessage?: string, fetchableReducer?: FetchableReduce
   if (fetchableReducer) {
     fetchableReducer.items.forEach((item) =>
       fetchableReducer.dispatch(
-        getErrorAction(item.reducerName)(errorMessage ?? 'An error has occurred'),
+        FetchableActions.array.error(item.reducerName)(errorMessage ?? 'An error has occurred'),
       ),
     );
   }

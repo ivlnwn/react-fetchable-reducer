@@ -1,6 +1,6 @@
-import {CLEAR, FAILURE, FetchableState, FETCHING, SET_EXTRA_DATA, SUCCESS} from './types';
+import {FetchableState, ActionTypePrefix} from './types';
 import {Action, Reducer} from 'redux';
-import {getActionName} from './actions';
+import {FetchableActions} from './actions';
 import {ItemUpdateMode} from './fetchableArrayReducer';
 import merge from 'lodash.merge';
 
@@ -30,19 +30,14 @@ export function createFetchableReducer<Model, ExtraModel = null>({
     action: any,
   ): FetchableState<Model, ExtraModel> {
     switch (action.type) {
-      /*
-       * FETCHING ACTION
-       */
-      case getActionName(FETCHING, reducerName):
+      case FetchableActions.getActionType(ActionTypePrefix.fetching, reducerName):
         return {
           ...state,
           isLoading: true,
           errorMessage: undefined,
         };
-      /*
-       * SUCCESS ACTION
-       */
-      case getActionName(SUCCESS, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.success, reducerName):
         if (dataUpdate?.mode === ItemUpdateMode.override) {
           return {
             ...state,
@@ -75,29 +70,23 @@ export function createFetchableReducer<Model, ExtraModel = null>({
             };
           }
         }
-      /*
-       * FAILURE ACTION
-       */
-      case getActionName(FAILURE, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.error, reducerName):
         return {
           ...state,
           isLoading: false,
           errorMessage: action.errorMessage,
         };
-      /*
-       * CLEAR ACTION
-       */
-      case getActionName(CLEAR, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.clear, reducerName):
         return {
           isLoading: false,
           data: undefined,
           extraData: undefined,
           errorMessage: undefined,
         };
-      /*
-       * SET_EXTRA_DATA ACTION
-       */
-      case getActionName(SET_EXTRA_DATA, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.setExtraData, reducerName):
         return {
           ...state,
           extraData: {...state.extraData, ...action.extraPayload},

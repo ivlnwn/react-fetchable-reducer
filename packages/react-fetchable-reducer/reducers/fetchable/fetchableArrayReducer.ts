@@ -1,16 +1,6 @@
-import {
-  CLEAR,
-  FAILURE,
-  FetchableArrayData,
-  FetchableArrayState,
-  FETCHING,
-  SET_EXTRA_DATA,
-  SUCCESS,
-  DELETE_BY_IDS,
-  ModelWithId,
-} from './types';
+import {FetchableArrayData, FetchableArrayState, ModelWithId, ActionTypePrefix} from './types';
 import {Action, Reducer} from 'redux';
-import {getActionName} from './actions';
+import {FetchableActions} from './actions';
 import merge from 'lodash.merge';
 import filter from 'lodash.filter';
 
@@ -94,19 +84,14 @@ export function createFetchableArrayReducer<Model extends ModelWithId, ExtraMode
     action: any,
   ): FetchableArrayState<Model, ExtraModel> {
     switch (action.type) {
-      /*
-       * FETCHING ACTION
-       */
-      case getActionName(FETCHING, reducerName):
+      case FetchableActions.getActionType(ActionTypePrefix.fetching, reducerName):
         return {
           ...state,
           isLoading: true,
           errorMessage: undefined,
         };
-      /*
-       * SUCCESS ACTION
-       */
-      case getActionName(SUCCESS, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.success, reducerName):
         if (!Array.isArray(action.payload)) {
           return {
             ...state,
@@ -133,37 +118,29 @@ export function createFetchableArrayReducer<Model extends ModelWithId, ExtraMode
             extraData: {...state.extraData, ...action.extraPayload},
           };
         }
-      /*
-       * FAILURE ACTION
-       */
-      case getActionName(FAILURE, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.error, reducerName):
         return {
           ...state,
           isLoading: false,
           errorMessage: action.errorMessage,
         };
-      /*
-       * CLEAR ACTION
-       */
-      case getActionName(CLEAR, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.clear, reducerName):
         return {
           isLoading: false,
           data: {allIds: [], byId: {}},
           extraData: undefined,
           errorMessage: undefined,
         };
-      /*
-       * SET_EXTRA_DATA ACTION
-       */
-      case getActionName(SET_EXTRA_DATA, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.setExtraData, reducerName):
         return {
           ...state,
           extraData: {...state.extraData, ...action.extraPayload},
         };
-      /*
-       * DELETE_BY_IDS ACTION
-       */
-      case getActionName(DELETE_BY_IDS, reducerName):
+
+      case FetchableActions.getActionType(ActionTypePrefix.deleteByIds, reducerName):
         const newById = state.data.byId;
         action.payload.forEach((o: number | string) => {
           delete newById[o];

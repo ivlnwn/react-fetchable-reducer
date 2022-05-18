@@ -21,9 +21,11 @@ export interface FetchableArrayState<Model, ExtraModel = null> {
   extraData?: ExtraModel;
 }
 
-export const FETCHING = 'FETCHING_';
-export const SUCCESS = 'FETCHING_SUCCESS_';
-export const FAILURE = 'FETCHING_FAILURE_';
-export const CLEAR = 'CLEAR_';
-export const SET_EXTRA_DATA = 'SET_EXTRA_DATA_';
-export const DELETE_BY_IDS = 'DELETE_BY_IDS_';
+export enum ActionTypePrefix {
+  fetching = 'FETCHING_',
+  success = 'FETCHING_SUCCESS_',
+  error = 'FETCHING_FAILURE_',
+  clear = 'CLEAR_',
+  setExtraData = 'SET_EXTRA_DATA_',
+  deleteByIds = 'DELETE_BY_IDS_',
+}

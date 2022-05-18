@@ -1,18 +1,18 @@
-import {CLEAR, FAILURE, FETCHING, SET_EXTRA_DATA, SUCCESS, DELETE_BY_IDS} from './types';
+import {ActionTypePrefix} from './types';
 
-export function getActionName(actionPrefix: string, reducerName: string): string {
+function getActionType(actionPrefix: string, reducerName: string): string {
   return actionPrefix + reducerName;
 }
 
-export function getFetchingAction(reducerName: string): () => any {
+function getFetchingAction(reducerName: string): () => any {
   return (): any => {
     return {
-      type: getActionName(FETCHING, reducerName),
+      type: getActionType(ActionTypePrefix.fetching, reducerName),
     };
   };
 }
 
-export function getSuccessAction<Model, ExtraModel = null>(
+function getSuccessAction<Model, ExtraModel = null>(
   reducerName: string,
 ): (
   data: any,
@@ -25,55 +25,65 @@ export function getSuccessAction<Model, ExtraModel = null>(
     parseToExtraModel?: (data: any) => ExtraModel | undefined,
   ): any => {
     return {
-      type: getActionName(SUCCESS, reducerName),
+      type: getActionType(ActionTypePrefix.success, reducerName),
       payload: parseToModel(data),
-      extraPayload: parseToExtraModel ? parseToExtraModel(data) : undefined,
+      extraPayload: parseToExtraModel?.(data),
     };
   };
 }
 
-export function getErrorAction(reducerName: string): (errorMessage: string) => any {
+function getErrorAction(reducerName: string): (errorMessage: string) => any {
   return (errorMessage: string): any => {
     return {
-      type: getActionName(FAILURE, reducerName),
+      type: getActionType(ActionTypePrefix.error, reducerName),
       errorMessage: errorMessage,
     };
   };
 }
 
-export function getClearAction(reducerName: string): () => any {
+function getClearAction(reducerName: string): () => any {
   return (): any => {
     return {
-      type: getActionName(CLEAR, reducerName),
+      type: getActionType(ActionTypePrefix.clear, reducerName),
     };
   };
 }
 
-export function getSetExtraDataAction<ExtraModel>(
-  reducerName: string,
-  extraData: ExtraModel,
-): () => any {
+function getSetExtraDataAction<ExtraModel>(reducerName: string, extraData: ExtraModel): () => any {
   return (): any => {
     return {
-      type: getActionName(SET_EXTRA_DATA, reducerName),
+      type: getActionType(ActionTypePrefix.setExtraData, reducerName),
       extraPayload: extraData,
     };
   };
 }
 
-export function getDeleteByIdsAction<Model, ExtraModel = null>(
+function getDeleteByIdsAction<Model, ExtraModel = null>(
   reducerName: string,
-): (
-  ids: number[] | string[],
-) => any {
-  return (
-    ids: number[] | string[],
-  ): any => {
+): (ids: number[] | string[]) => any {
+  return (ids: number[] | string[]): any => {
     return {
-      type: getActionName(DELETE_BY_IDS, reducerName),
+      type: getActionType(ActionTypePrefix.deleteByIds, reducerName),
       payload: ids,
     };
   };
 }
 
-
+export const FetchableActions = {
+  object: {
+    fetching: getFetchingAction,
+    success: getSuccessAction,
+    error: getErrorAction,
+    clear: getClearAction,
+    setExtraData: getSetExtraDataAction,
+  },
+  array: {
+    fetching: getFetchingAction,
+    success: getSuccessAction,
+    error: getErrorAction,
+    clear: getClearAction,
+    setExtraData: getSetExtraDataAction,
+    deleteByIds: getDeleteByIdsAction,
+  },
+  getActionType,
+};
